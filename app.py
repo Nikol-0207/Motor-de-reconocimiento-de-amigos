@@ -1,4 +1,3 @@
-
 from flask import Flask
 from controllers.home_controller import index
 
