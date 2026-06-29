@@ -1,8 +1,5 @@
 from controllers.network_controller import NetworkController
 
-print(" PROBANDO EL CONTROLADOR ")
-
-
 controlador = NetworkController()
 
 # Simulamos interacciones desde la "interfaz"
@@ -10,7 +7,7 @@ print("\n[Vista] -> Intentando registrar usuarios...")
 print(controlador.registrar_nuevo_usuario(1, "Juan"))
 print(controlador.registrar_nuevo_usuario(2, "María"))
 print(controlador.registrar_nuevo_usuario(3, "Pedro"))
-print(controlador.registrar_nuevo_usuario(1, "Clon de Juan")) # Debería dar error de ID duplicado
+print(controlador.registrar_nuevo_usuario(1, "Clon de Juan")) 
 
 print("\n[Vista] -> Intentando crear amistades...")
 print(controlador.crear_amistad(1, 2)) # Juan y María

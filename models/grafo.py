@@ -1,4 +1,3 @@
-# model/grafo_social.py
 from collections import deque
 from models.usuario import Usuario
 
@@ -44,7 +43,7 @@ class GrafoSocial:
         usuario_actual = self._usuarios[usuario_id]
         mis_amigos = usuario_actual.amigos  
         
-        # Diccionario 
+        # Diccionario
         candidatos = {}
 
         # BFS limitado a Distancia 2
@@ -62,7 +61,6 @@ class GrafoSocial:
                     else:
                         candidatos[amigo_de_mi_amigo_id] += 1
 
-        # Estructurar el resultado final
         resultado = []
         for candidato_id, comun_count in candidatos.items():
             candidato_obj = self._usuarios[candidato_id]
@@ -86,3 +84,38 @@ class GrafoSocial:
         if usuario_obj:
             return usuario_obj.nombre  
         return None
+    
+    def identificar_comunidades(self):
+        """
+        Retorna
+        Una lista de listas, donde cada sublista contiene diccionarios 
+        con la información básica de los usuarios de esa comunidad.
+        """
+        visitados = set()
+        comunidades_totales = []
+
+        
+        def _dfs(u_id, comunidad_actual):
+            visitados.add(u_id)
+            usuario_obj = self._usuarios[u_id]
+            
+            
+            comunidad_actual.append({
+                "id": u_id,
+                "nombre": usuario_obj.nombre
+            })
+            
+            # Explorar profundamente las conexiones del amigo actual
+            for amigo_id in usuario_obj.amigos:
+                if amigo_id not in visitados:
+                    _dfs(amigo_id, comunidad_actual)
+
+        
+        for usuario_id in self._usuarios:
+            if usuario_id not in visitados:
+               
+                nueva_comunidad = []
+                _dfs(usuario_id, nueva_comunidad)
+                comunidades_totales.append(nueva_comunidad)
+
+        return comunidades_totales

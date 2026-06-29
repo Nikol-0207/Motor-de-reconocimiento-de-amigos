@@ -3,113 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ data.title }}</title>
-    <style>
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            width: 300px;
-            margin: 0 auto;
-        }
-
-        .square {
-            width: 100px;
-            height: 100px;
-            border: 2px solid black;
-            font-size: 50px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .square:hover {
-            background-color: #ccc;
-        }
-
-        .playerX {
-            color: blue;
-        }
-
-        .playerO {
-            color: red;
-        }
-
-        #message {
-            text-align: center;
-            font-size: 20px;
-            margin-top: 20px;
-        }
-    </style>
+    <title>SocialNetwork Grapher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>{{ data.message }}</h1>
-    <div class="container">
-        <div class="square" data-cell="0"></div>
-        <div class="square" data-cell="1"></div>
-        <div class="square" data-cell="2"></div>
-        <div class="square" data-cell="3"></div>
-        <div class="square" data-cell="4"></div>
-        <div class="square" data-cell="5"></div>
-        <div class="square" data-cell="6"></div>
-        <div class="square" data-cell="7"></div>
-        <div class="square" data-cell="8"></div>
+  <header class="app-header" style="display: flex; align-items: center; justify-content: space-between;">
+    <span>MOTOR DE RECOMENDACIONES DE AMIGOS</span>
+    
+    <div id="headerSelectionArea" style="display: flex; align-items: center; gap: 12px;">
+        <div id="headerUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid var(--blanco); display: none;"></div>
+        
+        <span id="headerUserName" style="font-size: 14px; font-weight: normal; display: none; color: var(--lila-clarito);"></span>
+        
+        <button id="btnMakeFriends" class="btn-Make" style="padding: 6px 14px; font-size: 13px; width: auto;" disabled>Hacer amigos</button>
+    </div>
+   </header>
+
+    <div class="app-container">
+        <main class="graph-panel">
+            <canvas id="graphCanvas"></canvas>
+        </main>
+
+        <aside class="control-panel">
+            <h2>OPCIONES Y SUGERENCIAS</h2>
+            
+            <button id="btnSuggest" class="btn-primary" disabled>Sugerir amigos</button>
+            <button id="btnOpenModal" class="btn-secondary">Crear Usuario</button>
+            <button id="btnCommunity" class="btn-terciary">Buscar Comunidades</button>
+            
+            <div class="suggestions-section">
+                <h3>Sugerencias para la Red</h3>
+                <div id="suggestionsList" class="suggestions-list">
+                    <p class="empty-text">Haz clic en "Sugerir amigos" para procesar la red...</p>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <div id="message"></div>
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Crear Nuevo Usuario</h3>
+            <div class="form-group">
+                <label for="newUserName">Nombre del Usuario:</label>
+                <input type="text" id="newUserName" placeholder="Ej. Carlos">
+            </div>
+            <div class="modal-actions">
+                <button id="btnCancelUser" class="btn-cancel">Cancelar</button>
+                <button id="btnSaveUser" class="btn-save">Guardar</button>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        const squares = document.querySelectorAll('.square');
-        const message = document.getElementById('message');
+    <div id="communityModal" class="modal-overlay">
+    <div class="modal-content" style="width: 450px;"> <h3>Comunidades Detectadas</h3>
+        
+        <div id="communityContainer" class="community-container" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+            <p class="empty-text">Procesando red...</p>
+        </div>
+        
+        <div class="modal-actions">
+            <button id="btnCloseCommunity" class="btn-cancel">Cerrar</button>
+        </div>
+    </div>
+</div>
 
-        let currentPlayer = 'X';
+<div id="addFriendsModal" class="modal-overlay">
+    <div class="modal-content" style="width: 420px;">
+        <h3 id="addFriendsTitle">Conectar nuevos amigos</h3>
+        
+        <div id="nonFriendsContainer" style="max-height: 320px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;">
+            <p class="empty-text">Buscando usuarios disponibles...</p>
+        </div>
+        
+        <div class="modal-actions">
+            <button id="btnCloseAddFriends" class="btn-cancel">Cerrar</button>
+        </div>
+    </div>
+</div>
 
-        squares.forEach(square => {
-            square.addEventListener('click', () => {
-                if (square.textContent === '') {
-                    square.textContent = currentPlayer;
-                    checkWinner();
-                    if (currentPlayer === 'X') {
-                        currentPlayer = 'O';
-                    } else {
-                        currentPlayer = 'X';
-                    }
-                }
-            });
-        });
-
-        function checkWinner() {
-            const winningConditions = [
-                [0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8],
-                [0, 3, 6],
-                [1, 4, 7],
-                [2, 5, 8],
-                [0, 4, 8],
-                [2, 4, 6]
-            ];
-
-            for (let i = 0; i < winningConditions.length; i++) {
-                const condition = winningConditions[i];
-                if (squares[condition[0]].textContent === currentPlayer &&
-                    squares[condition[1]].textContent === currentPlayer &&
-                    squares[condition[2]].textContent === currentPlayer) {
-                    message.textContent = `¡Ganó el jugador ${currentPlayer}!`;
-                    return;
-                }
-            }
-
-            let isDraw = true;
-            for (let i = 0; i < squares.length; i++) {
-                if (squares[i].textContent === '') {
-                    isDraw = false;
-                    break;
-                }
-            }
-
-            if (isDraw) {
-                message.textContent = '¡Empate!';
-            }
-        }
-    </script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+   
 </body>
 </html>

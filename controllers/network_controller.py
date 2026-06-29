@@ -7,6 +7,9 @@ class NetworkController:
         del Grafo que manejará toda la aplicación.
         """
         self.grafo = GrafoSocial()
+        self.grafo.registrar_usuario(1, "Antonio R.")
+        self.grafo.registrar_usuario(2, "Maria Jose")
+        self.grafo.registrar_amistad(1, 2)
 
     def registrar_nuevo_usuario(self, usuario_id, nombre):
         """
@@ -51,3 +54,7 @@ class NetworkController:
             "usuario_solicitante": nombre_usuario,
             "recomendaciones": lista_sugerencias  
         }
+    
+controlador_red = NetworkController()
+
+
