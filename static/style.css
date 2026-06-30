@@ -137,6 +137,11 @@ body {
     transform: scale(0.95); 
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
 }
+.suggestions-list {
+    max-height: 320px; 
+    overflow-y: auto;  
+    padding-right: 6px; 
+}
 .suggestions-section {
     margin-top: 15px;
     border-top: 1px solid #e2e8f0;

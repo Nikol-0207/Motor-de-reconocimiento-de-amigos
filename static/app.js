@@ -14,7 +14,7 @@ btnMakeFriends.addEventListener('click', () => {
     if (!usuarioParaSugerencia) return;
 
     addFriendsModal.classList.add('active');
-    addFriendsTitle.textContent = `Hacer amigos para: ${usuarioParaSugerencia.nombre}`;
+    addFriendsTitle.textContent = `Búsqueda de amigos para: ${usuarioParaSugerencia.nombre}`;
     nonFriendsContainer.innerHTML = '<p class="empty-text">Cargando usuarios disponibles...</p>';
 
     // Pedir los no-amigos al backend
@@ -24,7 +24,7 @@ btnMakeFriends.addEventListener('click', () => {
             nonFriendsContainer.innerHTML = '';
 
             if (!usuariosDisponibles || usuariosDisponibles.length === 0) {
-                nonFriendsContainer.innerHTML = '<p class="empty-text">¡Felicidades! Ya eres amigo de todos en la red. ✨</p>';
+                nonFriendsContainer.innerHTML = '<p class="empty-text">Ya eres amigo de todos..! </p>';
                 return;
             }
 
@@ -71,7 +71,7 @@ btnMakeFriends.addEventListener('click', () => {
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success' || data.success) {
-                            // Cambiar look a éxito consumado
+                            
                             e.target.style.backgroundColor = "#48bb78"; 
                             e.target.textContent = "¡Amigos!";
                             
